@@ -19,7 +19,7 @@ public class MainView extends VerticalLayout {
 
     private CustomerService service;
 
-    Grid<Customer> grid = new Grid<>(Customer.class);
+    private Grid<Customer> grid = new Grid<>(Customer.class);
     private TextField filterText = new TextField();
 
 
@@ -38,9 +38,13 @@ public class MainView extends VerticalLayout {
             form.setCustomer(new Customer());
         });
 
-        add(
-            new HorizontalLayout(filterText, addCustomerBtn),
-            new Div(grid, form){{setSizeFull();}});
+
+        HorizontalLayout toolbar = new HorizontalLayout(filterText, addCustomerBtn);
+        Div content = new Div(grid, form);
+        content.setSizeFull();
+        content.addClassName("content");
+        add(toolbar,
+            content);
 
         updateList();
         form.addCustomersChangedListener(e -> updateList());
