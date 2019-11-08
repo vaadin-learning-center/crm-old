@@ -10,11 +10,9 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import com.vaadin.tutorial.spring.backend.entity.Customer;
 import com.vaadin.tutorial.spring.backend.service.CustomerService;
-import org.springframework.stereotype.Component;
 
 @Route("")
-//@PWA(name = "Project Base for Vaadin Flow with Spring", shortName = "Project Base")
-@Component
+//@PWA(name = "VaadinCRM", shortName = "VaadinCRM")
 public class MainView extends VerticalLayout {
 
     private CustomerService service;
@@ -27,7 +25,9 @@ public class MainView extends VerticalLayout {
         this.service = service;
         setSizeFull();
 
+        grid.removeColumnByKey("company");
         grid.setColumns("firstName", "lastName", "status");
+        grid.addColumn(customer -> customer.getCompany().getName()).setHeader("Company");
         filterText.setPlaceholder("Filter by name...");
         filterText.setClearButtonVisible(true);
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
