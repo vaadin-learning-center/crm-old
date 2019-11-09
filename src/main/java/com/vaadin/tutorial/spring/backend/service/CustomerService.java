@@ -109,7 +109,7 @@ public class CustomerService {
 						customer.setLastName(split[1]);
 						customer.setCompany(companies.get(r.nextInt(companies.size())));
 						customer.setStatus(CustomerStatus.values()[r.nextInt(CustomerStatus.values().length)]);
-						String email = (customer.getFirstName()+customer.getLastName()+"@"+customer.getCompany().getName().replaceAll("[\\s-]", "")+".com").toLowerCase();
+						String email = (customer.getFirstName()+"."+customer.getLastName()+"@"+customer.getCompany().getName().replaceAll("[\\s-]", "")+".com").toLowerCase();
 						customer.setEmail(email);
 						return customer;
 					}).collect(Collectors.toList()));

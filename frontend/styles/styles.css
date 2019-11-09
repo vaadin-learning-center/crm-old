@@ -1,18 +1,27 @@
-.main-view .content {
+a[highlight] {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+h1.logo {
+    margin: var(--lumo-space-m);
+}
+
+.list-view .content {
     display: flex;
 }
 
-.main-view .customer-grid {
+.list-view .customer-grid {
     flex: 2;
 }
 
-.main-view .customer-form {
+.list-view .customer-form {
     flex: 1;
     padding: var(--lumo-space-m);
 }
 
 @media all and (max-width: 750px) {
-    .main-view.editing .customer-grid {
+    .list-view.editing .customer-grid {
         display: none;
     }
 }

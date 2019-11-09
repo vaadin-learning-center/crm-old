@@ -1,4 +1,4 @@
-package com.vaadin.tutorial.spring.ui;
+package com.vaadin.tutorial.spring.ui.view.list;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -12,11 +12,10 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.tutorial.spring.backend.entity.Customer;
 import com.vaadin.tutorial.spring.backend.service.CompanyService;
 import com.vaadin.tutorial.spring.backend.service.CustomerService;
+import com.vaadin.tutorial.spring.ui.view.MainView;
 
-@Route("")
-//@PWA(name = "VaadinCRM", shortName = "VaadinCRM")
-@CssImport("./styles/styles.css")
-public class MainView extends VerticalLayout implements CustomerForm.HasCustomerEditor {
+@Route(value = "", layout = MainView.class)
+public class ListView extends VerticalLayout implements CustomerForm.HasCustomerEditor {
 
   private CustomerService service;
 
@@ -25,11 +24,11 @@ public class MainView extends VerticalLayout implements CustomerForm.HasCustomer
   private CustomerForm form;
 
 
-  public MainView(CustomerService customerService, CompanyService companyService) {
+  public ListView(CustomerService customerService, CompanyService companyService) {
     this.service = customerService;
 
     setSizeFull();
-    addClassName("main-view");
+    addClassName("list-view");
     configureGrid();
 
     form = new CustomerForm(this, companyService.findAll());
