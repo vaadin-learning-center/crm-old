@@ -1,0 +1,18 @@
+.main-view .content {
+    display: flex;
+}
+
+.main-view .customer-grid {
+    flex: 2;
+}
+
+.main-view .customer-form {
+    flex: 1;
+    padding: var(--lumo-space-m);
+}
+
+@media all and (max-width: 750px) {
+    .main-view.editing .customer-grid {
+        display: none;
+    }
+}

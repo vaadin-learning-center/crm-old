@@ -1,7 +1,9 @@
 package com.vaadin.tutorial.spring.ui;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -19,11 +21,11 @@ import com.vaadin.tutorial.spring.backend.service.CompanyService;
 import com.vaadin.tutorial.spring.backend.service.CustomerService;
 import org.springframework.context.annotation.Scope;
 
-@SpringComponent
-@Scope("prototype")
+import java.util.List;
+
 public class CustomerForm extends FormLayout {
 
-  private CustomerService service;
+  private HasCustomerEditor parent;
 
   private TextField firstName = new TextField("First name");
   private TextField lastName = new TextField("Last name");
@@ -32,57 +34,48 @@ public class CustomerForm extends FormLayout {
 
   private Button save = new Button("Save");
   private Button delete = new Button("Delete");
+  private Button close = new Button("Close editor");
 
   private Binder<Customer> binder = new Binder<>(Customer.class);
 
-  public class CustomersChangedEvent extends ComponentEvent<CustomerForm> {
-    public CustomersChangedEvent() {
-      super(CustomerForm.this, false);
-    }
-  }
+  public CustomerForm(HasCustomerEditor parent, List<Company> companies) {
+    this.parent = parent;
+    addClassName("customer-form");
 
-  public CustomerForm(CustomerService customerService, CompanyService companyService) {
-    this.service = customerService;
     status.setItems(CustomerStatus.values());
-    company.setItems(companyService.findAll());
+    company.setItems(companies);
     company.setItemLabelGenerator(Company::getName);
 
-    HorizontalLayout buttons = new HorizontalLayout(save, delete);
-    save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-    add(firstName, lastName, company, status, buttons);
     binder.bindInstanceFields(this);
-
-    save.addClickListener(event -> save());
-    delete.addClickListener(event -> delete());
+    add(firstName, lastName, company, status, createButtons());
   }
 
+  private Component createButtons() {
+    save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+    save.addClickShortcut(Key.ENTER);
+    delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+    close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+    close.addClickShortcut(Key.ESCAPE);
+
+    save.addClickListener(event -> parent.saveCustomer(binder.getBean()));
+    delete.addClickListener(event -> parent.deleteCustomer(binder.getBean()));
+    close.addClickListener(event -> parent.closeEditor());
+
+    HorizontalLayout buttonsLayout = new HorizontalLayout(save, delete, close);
+    buttonsLayout.setPadding(true);
+    return buttonsLayout;
+  }
 
   public void setCustomer(Customer customer) {
     binder.setBean(customer);
-
-    if (customer == null) {
-      setVisible(false);
-    } else {
-      setVisible(true);
+    if (customer != null) {
       firstName.focus();
     }
   }
 
-  private void save() {
-    Customer customer = binder.getBean();
-    service.save(customer);
-    fireEvent(new CustomersChangedEvent());
-    setCustomer(null);
-  }
-
-  private void delete() {
-    Customer customer = binder.getBean();
-    service.delete(customer);
-    fireEvent(new CustomersChangedEvent());
-    setCustomer(null);
-  }
-
-  public Registration addCustomersChangedListener(ComponentEventListener<CustomersChangedEvent> listener) {
-    return addListener(CustomersChangedEvent.class, listener);
+  public interface HasCustomerEditor {
+    void saveCustomer(Customer customer);
+    void deleteCustomer(Customer customer);
+    void closeEditor();
   }
 }
