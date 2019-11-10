@@ -26,6 +26,7 @@ h1.logo {
 }
 
 @media all and (max-width: 1000px) {
+    .list-view.editing .toolbar,
     .list-view.editing .contact-grid {
         display: none;
     }

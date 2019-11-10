@@ -49,8 +49,8 @@ public class ListView extends VerticalLayout implements ContactForm.HasContactEd
     grid.setSizeFull();
     grid.removeColumnByKey("company");
     grid.setColumns("firstName", "lastName", "email", "status");
-    grid.getColumns().forEach(col -> col.setAutoWidth(true));
     grid.addColumn(contact -> contact.getCompany().getName()).setHeader("Company");
+    grid.getColumns().forEach(col -> col.setAutoWidth(true));
     grid.asSingleSelect().addValueChangeListener(event ->
         editContact(grid.asSingleSelect().getValue()));
   }
