@@ -85,7 +85,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// web application manifest
 				"/manifest.webmanifest",
 				"/sw.js",
-				"/offline-page.html",
+				"/offline.html",
 
 				// icons and images
 				"/icons/**",

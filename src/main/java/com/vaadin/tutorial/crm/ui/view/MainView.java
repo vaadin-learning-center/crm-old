@@ -15,10 +15,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.PWA;
 import com.vaadin.tutorial.crm.ui.view.dashboard.DashboardView;
 import com.vaadin.tutorial.crm.ui.view.list.ListView;
 
-//@PWA(name = "VaadinCRM", shortName = "VaadinCRM")
+@PWA(name = "VaadinCRM", shortName = "VaadinCRM")
 @CssImport("./styles/styles.css")
 @Viewport("width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes, viewport-fit=cover")
 public class MainView extends AppLayout {
