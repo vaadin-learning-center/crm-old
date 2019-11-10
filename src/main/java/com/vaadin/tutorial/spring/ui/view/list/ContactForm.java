@@ -8,38 +8,40 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.tutorial.spring.backend.entity.Company;
-import com.vaadin.tutorial.spring.backend.entity.Customer;
-import com.vaadin.tutorial.spring.backend.entity.CustomerStatus;
+import com.vaadin.tutorial.spring.backend.entity.Contact;
+import com.vaadin.tutorial.spring.backend.entity.ContactStatus;
 
 import java.util.List;
 
-public class CustomerForm extends FormLayout {
+public class ContactForm extends FormLayout {
 
-  private HasCustomerEditor parent;
+  private HasContactEditor parent;
 
   private TextField firstName = new TextField("First name");
   private TextField lastName = new TextField("Last name");
-  private ComboBox<CustomerStatus> status = new ComboBox<>("Status");
+  private TextField email = new TextField("Email");
+  private ComboBox<ContactStatus> status = new ComboBox<>("Status");
   private ComboBox<Company> company = new ComboBox<>("Company");
 
   private Button save = new Button("Save");
   private Button delete = new Button("Delete");
-  private Button close = new Button("Close editor");
+  private Button close = new Button("Cancel");
 
-  private Binder<Customer> binder = new Binder<>(Customer.class);
+  private Binder<Contact> binder = new BeanValidationBinder<>(Contact.class);
 
-  public CustomerForm(HasCustomerEditor parent, List<Company> companies) {
+  public ContactForm(HasContactEditor parent, List<Company> companies) {
     this.parent = parent;
-    addClassName("customer-form");
+    addClassName("contact-form");
 
-    status.setItems(CustomerStatus.values());
+    status.setItems(ContactStatus.values());
     company.setItems(companies);
     company.setItemLabelGenerator(Company::getName);
 
     binder.bindInstanceFields(this);
-    add(firstName, lastName, company, status, createButtons());
+    add(firstName, lastName, email, company, status, createButtons());
   }
 
   private Component createButtons() {
@@ -49,25 +51,30 @@ public class CustomerForm extends FormLayout {
     close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
     close.addClickShortcut(Key.ESCAPE);
 
-    save.addClickListener(event -> parent.saveCustomer(binder.getBean()));
-    delete.addClickListener(event -> parent.deleteCustomer(binder.getBean()));
+    save.addClickListener(event -> validateAndSave());
+    delete.addClickListener(event -> parent.deleteContact(binder.getBean()));
     close.addClickListener(event -> parent.closeEditor());
 
-    HorizontalLayout buttonsLayout = new HorizontalLayout(save, delete, close);
-    buttonsLayout.setPadding(true);
-    return buttonsLayout;
+    binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
+    return new HorizontalLayout(save, delete, close);
   }
 
-  public void setCustomer(Customer customer) {
-    binder.setBean(customer);
-    if (customer != null) {
+  private void validateAndSave() {
+    if (binder.isValid()) {
+      parent.saveContact(binder.getBean());
+    }
+  }
+
+  public void setContact(Contact contact) {
+    binder.setBean(contact);
+    if (contact != null) {
       firstName.focus();
     }
   }
 
-  public interface HasCustomerEditor {
-    void saveCustomer(Customer customer);
-    void deleteCustomer(Customer customer);
+  public interface HasContactEditor {
+    void saveContact(Contact contact);
+    void deleteContact(Contact contact);
     void closeEditor();
   }
 }

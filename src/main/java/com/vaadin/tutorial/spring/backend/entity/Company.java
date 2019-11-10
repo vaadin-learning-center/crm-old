@@ -1,9 +1,6 @@
 package com.vaadin.tutorial.spring.backend.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,8 +8,8 @@ import java.util.List;
 public class Company extends AbstractEntity {
   private String name;
 
-  @OneToMany(mappedBy = "company")
-  private List<Customer> employees = new LinkedList<>();
+  @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
+  private List<Contact> employees = new LinkedList<>();
 
   public Company() {
   }
@@ -29,7 +26,7 @@ public class Company extends AbstractEntity {
     this.name = name;
   }
 
-  public List<Customer> getEmployees() {
+  public List<Contact> getEmployees() {
     return employees;
   }
 }

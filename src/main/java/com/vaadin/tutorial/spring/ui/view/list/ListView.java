@@ -1,7 +1,6 @@
 package com.vaadin.tutorial.spring.ui.view.list;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -9,49 +8,51 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
-import com.vaadin.tutorial.spring.backend.entity.Customer;
+import com.vaadin.tutorial.spring.backend.entity.Contact;
 import com.vaadin.tutorial.spring.backend.service.CompanyService;
-import com.vaadin.tutorial.spring.backend.service.CustomerService;
+import com.vaadin.tutorial.spring.backend.service.ContactService;
 import com.vaadin.tutorial.spring.ui.view.MainView;
 
 @Route(value = "", layout = MainView.class)
-public class ListView extends VerticalLayout implements CustomerForm.HasCustomerEditor {
+public class ListView extends VerticalLayout implements ContactForm.HasContactEditor {
 
-  private CustomerService service;
+  private ContactService service;
 
-  private Grid<Customer> grid = new Grid<>(Customer.class);
+  private Grid<Contact> grid = new Grid<>(Contact.class);
   private TextField filterText = new TextField();
-  private CustomerForm form;
+  private ContactForm form;
 
 
-  public ListView(CustomerService customerService, CompanyService companyService) {
-    this.service = customerService;
+  public ListView(ContactService contactService, CompanyService companyService) {
+    this.service = contactService;
 
     setSizeFull();
     addClassName("list-view");
     configureGrid();
 
-    form = new CustomerForm(this, companyService.findAll());
+    form = new ContactForm(this, companyService.findAll());
+
+    HorizontalLayout toolbar = getToolbar();
 
     Div content = new Div(grid, form);
     content.addClassName("content");
     content.setSizeFull();
 
-    add(getToolbar(), content);
+    add(toolbar, content);
 
     closeEditor();
     updateList();
   }
 
   private void configureGrid() {
-    grid.addClassName("customer-grid");
+    grid.addClassName("contact-grid");
     grid.setSizeFull();
     grid.removeColumnByKey("company");
     grid.setColumns("firstName", "lastName", "email", "status");
     grid.getColumns().forEach(col -> col.setAutoWidth(true));
-    grid.addColumn(customer -> customer.getCompany().getName()).setHeader("Company");
+    grid.addColumn(contact -> contact.getCompany().getName()).setHeader("Company");
     grid.asSingleSelect().addValueChangeListener(event ->
-        editCustomer(grid.asSingleSelect().getValue()));
+        editContact(grid.asSingleSelect().getValue()));
   }
 
   private HorizontalLayout getToolbar() {
@@ -60,13 +61,13 @@ public class ListView extends VerticalLayout implements CustomerForm.HasCustomer
     filterText.setValueChangeMode(ValueChangeMode.LAZY);
     filterText.addValueChangeListener(e -> updateList());
 
-    Button addCustomerBtn = new Button("Add new customer");
-    addCustomerBtn.addClickListener(e -> {
+    Button addContactButton = new Button("Add new contact");
+    addContactButton.addClickListener(e -> {
       grid.asSingleSelect().clear();
-      form.setCustomer(new Customer());
+      editContact(new Contact());
     });
 
-    HorizontalLayout toolbar = new HorizontalLayout(filterText, addCustomerBtn);
+    HorizontalLayout toolbar = new HorizontalLayout(filterText, addContactButton);
     toolbar.addClassName("toolbar");
     return toolbar;
   }
@@ -75,33 +76,33 @@ public class ListView extends VerticalLayout implements CustomerForm.HasCustomer
     grid.setItems(service.findAll(filterText.getValue()));
   }
 
-  public void editCustomer(Customer customer) {
-    if (customer == null) {
+  public void editContact(Contact contact) {
+    if (contact == null) {
       closeEditor();
     } else {
-      form.setCustomer(grid.asSingleSelect().getValue());
+      form.setContact(contact);
       form.setVisible(true);
       addClassName("editing");
     }
   }
 
   @Override
-  public void saveCustomer(Customer customer) {
-    service.save(customer);
+  public void saveContact(Contact contact) {
+    service.save(contact);
     updateList();
     closeEditor();
   }
 
   @Override
-  public void deleteCustomer(Customer customer) {
-    service.delete(customer);
+  public void deleteContact(Contact contact) {
+    service.delete(contact);
     updateList();
     closeEditor();
   }
 
   @Override
   public void closeEditor() {
-    form.setCustomer(null);
+    form.setContact(null);
     form.setVisible(false);
     removeClassName("editing");
   }

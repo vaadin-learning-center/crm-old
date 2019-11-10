@@ -1,21 +1,33 @@
 package com.vaadin.tutorial.spring.backend.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDate;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
-public class Customer extends AbstractEntity implements Cloneable {
+public class Contact extends AbstractEntity implements Cloneable {
 
+  @NotNull
+  @NotEmpty
   private String firstName = "";
+
+  @NotNull
+  @NotEmpty
   private String lastName = "";
 
   @ManyToOne
   @JoinColumn(name = "company_id")
+  @NotNull
   private Company company;
 
   @Enumerated(EnumType.STRING)
-  private CustomerStatus status;
+  @NotNull
+  private ContactStatus status;
+
+  @Email
+  @NotNull
+  @NotEmpty
   private String email = "";
 
 
@@ -27,11 +39,11 @@ public class Customer extends AbstractEntity implements Cloneable {
     this.email = email;
   }
 
-  public CustomerStatus getStatus() {
+  public ContactStatus getStatus() {
     return status;
   }
 
-  public void setStatus(CustomerStatus status) {
+  public void setStatus(ContactStatus status) {
     this.status = status;
   }
 

@@ -11,17 +11,22 @@ h1.logo {
     display: flex;
 }
 
-.list-view .customer-grid {
+.list-view .contact-grid {
     flex: 2;
 }
 
-.list-view .customer-form {
+.list-view .contact-form {
     flex: 1;
     padding: var(--lumo-space-m);
 }
 
-@media all and (max-width: 750px) {
-    .list-view.editing .customer-grid {
+.dashboard-view .contact-stats {
+    font-size: 4em;
+    margin: 1em 0;
+}
+
+@media all and (max-width: 1000px) {
+    .list-view.editing .contact-grid {
         display: none;
     }
 }
