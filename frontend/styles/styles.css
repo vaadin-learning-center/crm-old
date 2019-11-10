@@ -11,6 +11,15 @@ a[highlight] {
     margin: var(--lumo-space-m);
 }
 
+.drawer-content {
+    box-sizing: border-box;
+    height: 100%;
+    padding: var(--lumo-space-m);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .list-view .content {
     display: flex;
 }
