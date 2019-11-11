@@ -68,7 +68,7 @@ public class ListView extends VerticalLayout implements ContactForm.HasContactEd
     filterText.setValueChangeMode(ValueChangeMode.LAZY);
     filterText.addValueChangeListener(e -> updateList());
 
-    Button addContactButton = new Button("Add new contact");
+    Button addContactButton = new Button("Add contact");
     addContactButton.addClickListener(click -> addContact());
 
     Button importButton = new Button("Import leads", click -> importLeads());
