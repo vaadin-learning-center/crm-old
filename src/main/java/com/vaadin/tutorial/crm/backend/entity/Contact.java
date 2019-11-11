@@ -18,7 +18,6 @@ public class Contact extends AbstractEntity implements Cloneable {
 
   @ManyToOne
   @JoinColumn(name = "company_id")
-  @NotNull
   private Company company;
 
   @Enumerated(EnumType.STRING)
@@ -29,7 +28,6 @@ public class Contact extends AbstractEntity implements Cloneable {
   @NotNull
   @NotEmpty
   private String email = "";
-
 
   public String getEmail() {
     return email;

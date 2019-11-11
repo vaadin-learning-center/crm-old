@@ -5,7 +5,11 @@ import com.vaadin.tutorial.crm.backend.entity.Contact;
 import com.vaadin.tutorial.crm.backend.entity.ContactStatus;
 import com.vaadin.tutorial.crm.backend.repository.CompanyRepository;
 import com.vaadin.tutorial.crm.backend.repository.ContactRepository;
+import com.vaadin.tutorial.crm.backend.service.restimport.ImportResponse;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -19,10 +23,14 @@ public class ContactService {
 	private static final Logger LOGGER = Logger.getLogger(ContactService.class.getName());
 	private ContactRepository contactRepository;
 	private CompanyRepository companyRepository;
+	private RestTemplate restTemplate;
 
-	public ContactService(ContactRepository contactRepository, CompanyRepository companyRepository) {
+	public ContactService(ContactRepository contactRepository,
+												CompanyRepository companyRepository,
+												RestTemplate restTemplate) {
 		this.contactRepository = contactRepository;
 		this.companyRepository = companyRepository;
+		this.restTemplate = restTemplate;
 	}
 
 	/**
@@ -40,7 +48,7 @@ public class ContactService {
 	 *            if all objects should be returned.
 	 * @return list a Contact objects
 	 */
-	public synchronized List<Contact> findAll(String stringFilter) {
+	public List<Contact> findAll(String stringFilter) {
 		if (stringFilter == null || stringFilter.isEmpty()) {
 			return contactRepository.findAll();
 		} else {
@@ -78,6 +86,21 @@ public class ContactService {
 			return;
 		}
 		contactRepository.save(contact);
+	}
+
+	public void importContacts() {
+		ImportResponse imported = restTemplate.getForEntity("https://randomuser.me/api/?inc=name,email&results=10", ImportResponse.class).getBody();
+
+		if(imported != null && imported.getResults()!= null) {
+			contactRepository.saveAll(imported.getResults().stream().map(result -> {
+				Contact contact = new Contact();
+				contact.setFirstName(result.getName().getFirst());
+				contact.setLastName(result.getName().getLast());
+				contact.setEmail(result.getEmail());
+				contact.setStatus(ContactStatus.ImportedLead);
+				return contact;
+			}).collect(Collectors.toList()));
+		}
 	}
 
 	/**

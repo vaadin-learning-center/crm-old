@@ -1,13 +1,17 @@
 package com.vaadin.tutorial.crm.ui.view.list;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
+import com.vaadin.tutorial.crm.backend.entity.Company;
 import com.vaadin.tutorial.crm.backend.entity.Contact;
 import com.vaadin.tutorial.crm.backend.service.CompanyService;
 import com.vaadin.tutorial.crm.backend.service.ContactService;
@@ -49,7 +53,10 @@ public class ListView extends VerticalLayout implements ContactForm.HasContactEd
     grid.setSizeFull();
     grid.removeColumnByKey("company");
     grid.setColumns("firstName", "lastName", "email", "status");
-    grid.addColumn(contact -> contact.getCompany().getName()).setHeader("Company");
+    grid.addColumn(contact -> {
+      Company company = contact.getCompany();
+      return company == null ? "-" : company.getName();
+    }).setHeader("Company");
     grid.getColumns().forEach(col -> col.setAutoWidth(true));
     grid.asSingleSelect().addValueChangeListener(event ->
         editContact(grid.asSingleSelect().getValue()));
@@ -62,14 +69,28 @@ public class ListView extends VerticalLayout implements ContactForm.HasContactEd
     filterText.addValueChangeListener(e -> updateList());
 
     Button addContactButton = new Button("Add new contact");
-    addContactButton.addClickListener(e -> {
-      grid.asSingleSelect().clear();
-      editContact(new Contact());
-    });
+    addContactButton.addClickListener(click -> addContact());
 
-    HorizontalLayout toolbar = new HorizontalLayout(filterText, addContactButton);
+    Button importButton = new Button("Import leads", click -> importLeads());
+    importButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+
+    HorizontalLayout toolbar = new HorizontalLayout(filterText, addContactButton, importButton);
     toolbar.addClassName("toolbar");
     return toolbar;
+  }
+
+  private void importLeads() {
+    service.importContacts();
+    updateList();
+    Notification notification = new Notification("Import successful");
+    notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+    notification.setDuration(3000);
+    notification.open();
+  }
+
+  void addContact() {
+    grid.asSingleSelect().clear();
+    editContact(new Contact());
   }
 
   public void updateList() {
