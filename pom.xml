@@ -125,6 +125,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>3.7.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
@@ -258,41 +265,7 @@
                         <configuration>
                             <trimStackTrace>false</trimStackTrace>
                             <enableAssertions>true</enableAssertions>
-                            <systemPropertyVariables>
-                                <!-- Pass location of downloaded webdrivers to the tests -->
-                                <webdriver.chrome.driver>${webdriver.chrome.driver}</webdriver.chrome.driver>
-                            </systemPropertyVariables>
                         </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>com.lazerycode.selenium</groupId>
-                        <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-                        <version>1.0.17</version>
-                        <configuration>
-                            <onlyGetDriversForHostOperatingSystem>true
-                            </onlyGetDriversForHostOperatingSystem>
-                            <rootStandaloneServerDirectory>
-                                ${project.basedir}/drivers/driver
-                            </rootStandaloneServerDirectory>
-                            <downloadedZipFileDirectory>
-                                ${project.basedir}/drivers/driver_zips
-                            </downloadedZipFileDirectory>
-                            <customRepositoryMap>
-                                ${project.basedir}/webdrivers.xml
-                            </customRepositoryMap>
-                            <!-- Overwrite any existing binaries that have been downloaded and extracted -->
-                            <overwriteFilesThatExist>true</overwriteFilesThatExist>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <!-- use phase "none" to skip download step -->
-                                <phase>${drivers.downloader.phase}</phase>
-                                <goals>
-                                    <goal>selenium</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>

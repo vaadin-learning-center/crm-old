@@ -8,7 +8,10 @@ import com.vaadin.testbench.parallel.ParallelTest;
 
 import org.apache.commons.exec.OS;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * Base class for TestBench IntegrationTests on Chrome.
@@ -25,17 +28,18 @@ import org.junit.Rule;
  * <a href= "https://vaadin.com/docs/testbench/testbench-overview.html">Vaadin
  * TestBench</a>.
  */
-@RunLocally(Browser.CHROME)
 public abstract class AbstractTest extends ParallelTest {
     private static final String SERVER_HOST = IPAddress.findSiteLocalAddress();
     private static final int SERVER_PORT = 8080;
 
     private final String route;
-    static {
-        setChromeDriverLocation();
-    }
     @Rule
     public ScreenshotOnFailureRule rule = new ScreenshotOnFailureRule(this, true);
+
+    @BeforeClass
+    public static void setupClass() {
+        WebDriverManager.chromedriver().setup();
+    }
 
     protected AbstractTest(String route) {
         this.route = route;
@@ -49,26 +53,6 @@ public abstract class AbstractTest extends ParallelTest {
 
     private static String getURL(String route) {
         return String.format("http://%s:%d/%s", SERVER_HOST, SERVER_PORT, route);
-    }
-
-    private static void setChromeDriverLocation() {
-        final String chromedriverProperty = "webdriver.chrome.driver";
-        if (System.getProperty(chromedriverProperty) != null)
-            return;
-
-        String osString;
-        String driverName = "chromedriver";
-        String bits = "64bit";
-        if (OS.isFamilyMac()) {
-            osString = "osx";
-        } else if (OS.isFamilyWindows()) {
-            osString = "windows";
-            driverName = "chromedriver.exe";
-        } else {
-            osString = "linux";
-        }
-        System.setProperty(chromedriverProperty,
-                "drivers/driver/" + osString + "/googlechrome/" + bits + "/" + driverName);
     }
 
 }
