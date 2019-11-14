@@ -16,16 +16,18 @@ import com.vaadin.tutorial.crm.backend.entity.Contact;
 import com.vaadin.tutorial.crm.backend.service.CompanyService;
 import com.vaadin.tutorial.crm.backend.service.ContactService;
 import com.vaadin.tutorial.crm.ui.view.MainView;
+import com.vaadin.tutorial.crm.ui.view.list.ContactForm.CloseEvent;
+import com.vaadin.tutorial.crm.ui.view.list.ContactForm.DeleteEvent;
+import com.vaadin.tutorial.crm.ui.view.list.ContactForm.SaveEvent;
 
 @Route(value = "", layout = MainView.class)
-public class ListView extends VerticalLayout implements ContactForm.HasContactEditor {
+public class ListView extends VerticalLayout {
 
   private ContactService service;
 
   private Grid<Contact> grid = new Grid<>(Contact.class);
   private TextField filterText = new TextField();
   private ContactForm form;
-
 
   public ListView(ContactService contactService, CompanyService companyService) {
     this.service = contactService;
@@ -34,7 +36,10 @@ public class ListView extends VerticalLayout implements ContactForm.HasContactEd
     addClassName("list-view");
     configureGrid();
 
-    form = new ContactForm(this, companyService.findAll());
+    form = new ContactForm(companyService.findAll());
+    form.addListener(SaveEvent.class, this::saveContact);
+    form.addListener(DeleteEvent.class, this::deleteContact);
+    form.addListener(CloseEvent.class, e -> this.closeEditor());
 
     HorizontalLayout toolbar = getToolbar();
 
@@ -58,8 +63,7 @@ public class ListView extends VerticalLayout implements ContactForm.HasContactEd
       return company == null ? "-" : company.getName();
     }).setHeader("Company");
     grid.getColumns().forEach(col -> col.setAutoWidth(true));
-    grid.asSingleSelect().addValueChangeListener(event ->
-        editContact(grid.asSingleSelect().getValue()));
+    grid.asSingleSelect().addValueChangeListener(event -> editContact(grid.asSingleSelect().getValue()));
   }
 
   private HorizontalLayout getToolbar() {
@@ -107,22 +111,19 @@ public class ListView extends VerticalLayout implements ContactForm.HasContactEd
     }
   }
 
-  @Override
-  public void saveContact(Contact contact) {
-    service.save(contact);
+  private void saveContact(SaveEvent event) {
+    service.save(event.getContact());
     updateList();
     closeEditor();
   }
 
-  @Override
-  public void deleteContact(Contact contact) {
-    service.delete(contact);
+  private void deleteContact(DeleteEvent event) {
+    service.delete(event.getContact());
     updateList();
     closeEditor();
   }
 
-  @Override
-  public void closeEditor() {
+  private void closeEditor() {
     form.setContact(null);
     form.setVisible(false);
     removeClassName("editing");
