@@ -1,11 +1,11 @@
-package com.vaadin.tutorial.crm;
+package com.vaadin.tutorial.crm.it;
 
 import com.vaadin.flow.component.grid.testbench.GridColumnElement;
 import com.vaadin.flow.component.grid.testbench.GridElement;
-import com.vaadin.tutorial.crm.elements.list.ContactsFormElement;
-import com.vaadin.tutorial.crm.elements.list.ListViewElement;
+import com.vaadin.tutorial.crm.it.elements.list.ContactsFormElement;
+import com.vaadin.tutorial.crm.it.elements.list.ListViewElement;
+import com.vaadin.tutorial.crm.it.util.AbstractViewTest;
 import com.vaadin.tutorial.crm.ui.view.list.ListView;
-import com.vaadin.tutorial.crm.util.AbstractViewTest;
 
 import org.junit.Assert;
 import org.junit.Test;

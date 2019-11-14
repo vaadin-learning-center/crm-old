@@ -1,8 +1,8 @@
-package com.vaadin.tutorial.crm;
+package com.vaadin.tutorial.crm.it;
 
-import com.vaadin.tutorial.crm.elements.list.ListViewElement;
-import com.vaadin.tutorial.crm.elements.login.LoginViewElement;
-import com.vaadin.tutorial.crm.util.AbstractTest;
+import com.vaadin.tutorial.crm.it.elements.list.ListViewElement;
+import com.vaadin.tutorial.crm.it.elements.login.LoginViewElement;
+import com.vaadin.tutorial.crm.it.util.AbstractTest;
 
 import org.junit.Assert;
 import org.junit.Test;

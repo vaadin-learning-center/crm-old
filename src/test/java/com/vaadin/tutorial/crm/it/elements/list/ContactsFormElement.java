@@ -1,4 +1,4 @@
-package com.vaadin.tutorial.crm.elements.list;
+package com.vaadin.tutorial.crm.it.elements.list;
 
 import com.vaadin.flow.component.button.testbench.ButtonElement;
 import com.vaadin.flow.component.combobox.testbench.ComboBoxElement;

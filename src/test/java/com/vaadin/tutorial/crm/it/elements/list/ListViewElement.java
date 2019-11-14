@@ -1,4 +1,4 @@
-package com.vaadin.tutorial.crm.elements.list;
+package com.vaadin.tutorial.crm.it.elements.list;
 
 import com.vaadin.flow.component.grid.testbench.GridElement;
 import com.vaadin.flow.component.orderedlayout.testbench.VerticalLayoutElement;

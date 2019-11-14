@@ -1,9 +1,9 @@
-package com.vaadin.tutorial.crm.util;
+package com.vaadin.tutorial.crm.it.util;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.internal.AnnotationReader;
 import com.vaadin.flow.router.Route;
-import com.vaadin.tutorial.crm.elements.login.LoginViewElement;
+import com.vaadin.tutorial.crm.it.elements.login.LoginViewElement;
 
 import org.junit.Assert;
 

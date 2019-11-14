@@ -1,4 +1,4 @@
-package com.vaadin.tutorial.crm.elements.login;
+package com.vaadin.tutorial.crm.it.elements.login;
 
 import com.vaadin.flow.component.login.testbench.LoginFormElement;
 import com.vaadin.flow.component.orderedlayout.testbench.VerticalLayoutElement;

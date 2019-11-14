@@ -1,4 +1,4 @@
-package com.vaadin.tutorial.crm.util;
+package com.vaadin.tutorial.crm.it.util;
 
 import com.vaadin.testbench.IPAddress;
 import com.vaadin.testbench.ScreenshotOnFailureRule;
