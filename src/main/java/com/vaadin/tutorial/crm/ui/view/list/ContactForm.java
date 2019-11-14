@@ -21,17 +21,17 @@ import com.vaadin.tutorial.crm.backend.entity.ContactStatus;
 
 public class ContactForm extends FormLayout {
 
-  private TextField firstName = new TextField("First name");
-  private TextField lastName = new TextField("Last name");
-  private TextField email = new TextField("Email");
-  private ComboBox<ContactStatus> status = new ComboBox<>("Status");
-  private ComboBox<Company> company = new ComboBox<>("Company");
+  TextField firstName = new TextField("First name");
+  TextField lastName = new TextField("Last name");
+  TextField email = new TextField("Email");
+  ComboBox<ContactStatus> status = new ComboBox<>("Status");
+  ComboBox<Company> company = new ComboBox<>("Company");
 
-  private Button save = new Button("Save");
-  private Button delete = new Button("Delete");
-  private Button close = new Button("Cancel");
+  Button save = new Button("Save");
+  Button delete = new Button("Delete");
+  Button close = new Button("Cancel");
 
-  private Binder<Contact> binder = new BeanValidationBinder<>(Contact.class);
+  Binder<Contact> binder = new BeanValidationBinder<>(Contact.class);
 
   public ContactForm(List<Company> companies) {
     addClassName("contact-form");
