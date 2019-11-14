@@ -15,6 +15,7 @@
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
         <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
+        <selenium.version>3.141.59</selenium.version>
     </properties>
 
     <parent>
@@ -218,7 +219,7 @@
         </profile>
 
         <profile>
-            <id>integration-tests</id>
+            <id>it</id>
             <build>
                 <plugins>
                     <plugin>
@@ -278,8 +279,10 @@
                                 ${project.basedir}/drivers/driver_zips
                             </downloadedZipFileDirectory>
                             <customRepositoryMap>
-                                ${project.basedir}/drivers.xml
+                                ${project.basedir}/webdrivers.xml
                             </customRepositoryMap>
+                            <!-- Overwrite any existing binaries that have been downloaded and extracted -->
+                            <overwriteFilesThatExist>true</overwriteFilesThatExist>
                         </configuration>
                         <executions>
                             <execution>

@@ -41,6 +41,14 @@ public class ContactForm extends FormLayout {
     company.setItemLabelGenerator(Company::getName);
 
     binder.bindInstanceFields(this);
+    firstName.setId("firstName");
+    lastName.setId("lastName");
+    email.setId("email");
+    status.setId("status");
+    company.setId("company");
+    save.setId("save");
+    delete.setId("delete");
+    close.setId("close");
     add(firstName, lastName, email, company, status, createButtons());
   }
 
@@ -74,7 +82,9 @@ public class ContactForm extends FormLayout {
 
   public interface HasContactEditor {
     void saveContact(Contact contact);
+
     void deleteContact(Contact contact);
+
     void closeEditor();
   }
 }
