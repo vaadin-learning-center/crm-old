@@ -58,12 +58,8 @@ public class MainView extends AppLayout {
     });
 
     Div drawerLayout = new Div(
-        new VerticalLayout(
-            new RouterLink("List", ListView.class),
-            new RouterLink("Dashboard", DashboardView.class)
-        ),
-        darkModeToggle
-    );
+        new VerticalLayout(new RouterLink("List", ListView.class), new RouterLink("Dashboard", DashboardView.class)),
+        darkModeToggle);
     drawerLayout.addClassName("drawer-content");
     addToDrawer(drawerLayout);
   }
