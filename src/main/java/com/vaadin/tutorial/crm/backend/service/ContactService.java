@@ -6,6 +6,7 @@ import com.vaadin.tutorial.crm.backend.entity.ContactStatus;
 import com.vaadin.tutorial.crm.backend.repository.CompanyRepository;
 import com.vaadin.tutorial.crm.backend.repository.ContactRepository;
 import com.vaadin.tutorial.crm.backend.service.restimport.ImportResponse;
+import com.vaadin.tutorial.crm.backend.service.restimport.Result;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class ContactService {
 	}
 
 	/**
-	 * Finds all Contact's that match given filter.
+	 * Finds all Contacts that match given filter.
 	 *
 	 * @param stringFilter
 	 *            filter that returned objects should match or null/empty string
@@ -92,15 +93,18 @@ public class ContactService {
 		ImportResponse imported = restTemplate.getForEntity("https://randomuser.me/api/?inc=name,email&results=10", ImportResponse.class).getBody();
 
 		if(imported != null && imported.getResults()!= null) {
-			contactRepository.saveAll(imported.getResults().stream().map(result -> {
-				Contact contact = new Contact();
-				contact.setFirstName(result.getName().getFirst());
-				contact.setLastName(result.getName().getLast());
-				contact.setEmail(result.getEmail());
-				contact.setStatus(ContactStatus.ImportedLead);
-				return contact;
-			}).collect(Collectors.toList()));
+			contactRepository.saveAll(imported.getResults().stream()
+					.map(this::getContact).collect(Collectors.toList()));
 		}
+	}
+
+	private Contact getContact(Result result) {
+		Contact contact = new Contact();
+		contact.setFirstName(result.getName().getFirst());
+		contact.setLastName(result.getName().getLast());
+		contact.setEmail(result.getEmail());
+		contact.setStatus(ContactStatus.ImportedLead);
+		return contact;
 	}
 
 	/**
