@@ -44,23 +44,9 @@ public class MainView extends AppLayout {
   }
 
   private void createDrawer() {
-    Button darkModeToggle = new Button("Dark mode");
-    darkModeToggle.setIcon(VaadinIcon.LIGHTBULB.create());
-    darkModeToggle.addClickListener(c -> {
-      ThemeList themeList = UI.getCurrent().getElement().getThemeList();
-      if (themeList.contains("dark")) {
-        themeList.remove("dark");
-        darkModeToggle.setText("Dark Mode");
-      } else {
-        themeList.add("dark");
-        darkModeToggle.setText("Light Mode");
-      }
-    });
-
-    Div drawerLayout = new Div(
-        new VerticalLayout(new RouterLink("List", ListView.class), new RouterLink("Dashboard", DashboardView.class)),
-        darkModeToggle);
-    drawerLayout.addClassName("drawer-content");
-    addToDrawer(drawerLayout);
+    addToDrawer(
+        new VerticalLayout(
+            new RouterLink("List", ListView.class),
+            new RouterLink("Dashboard", DashboardView.class)));
   }
 }
