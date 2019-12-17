@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// Restrict access to our application.
 				.and().authorizeRequests()
 
-				// Allow all flow internal requests.
+				// Allow all Vaadin internal requests.
 				.requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
 
 				// Allow all requests by logged in users.

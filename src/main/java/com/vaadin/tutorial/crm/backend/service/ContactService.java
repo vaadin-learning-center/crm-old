@@ -89,6 +89,9 @@ public class ContactService {
 		contactRepository.save(contact);
 	}
 
+	/**
+	 * Imports contacts from a remote REST API and persists them in the database
+	 */
 	public void importContacts() {
 		ImportResponse imported = restTemplate.getForEntity("https://randomuser.me/api/?inc=name,email&results=10", ImportResponse.class).getBody();
 
@@ -98,6 +101,11 @@ public class ContactService {
 		}
 	}
 
+	/**
+	 * Converts a Result object from a REST call to a Contact
+	 * @param result A single result
+	 * @return a Contact populated with data from the Result
+	 */
 	private Contact getContact(Result result) {
 		Contact contact = new Contact();
 		contact.setFirstName(result.getName().getFirst());
