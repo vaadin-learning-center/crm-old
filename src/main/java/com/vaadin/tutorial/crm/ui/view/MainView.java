@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Viewport;
+import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.tutorial.crm.ui.view.dashboard.DashboardView;
@@ -39,9 +40,11 @@ public class MainView extends AppLayout {
   }
 
   private void createDrawer() {
+    RouterLink listLink = new RouterLink("List", ListView.class);
+    listLink.setHighlightCondition(HighlightConditions.sameLocation());
     addToDrawer(
         new VerticalLayout(
-            new RouterLink("List", ListView.class),
+            listLink,
             new RouterLink("Dashboard", DashboardView.class)));
   }
 }
