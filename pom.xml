@@ -214,6 +214,12 @@
         </configuration>
       </plugin>
     </plugins>
+    <resources>
+        <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering>
+        </resource>
+    </resources>
   </build>
   <profiles>
     <profile>
@@ -221,6 +227,7 @@
       <id>production</id>
       <properties>
         <vaadin.productionMode>true</vaadin.productionMode>
+        <spring.profiles.active>aws</spring.profiles.active>
       </properties>
       <dependencies>
         <dependency>
@@ -234,7 +241,9 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
             <configuration>
-              <jvmArguments>-Dvaadin.productionMode</jvmArguments>
+                <profiles>
+                    <profile>${spring.profiles.active}</profile>
+                </profiles>
             </configuration>
           </plugin>
           <plugin>
