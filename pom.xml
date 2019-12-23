@@ -222,7 +222,7 @@
       <id>production</id>
       <properties>
         <vaadin.productionMode>true</vaadin.productionMode>
-        <spring.profiles.active>aws</spring.profiles.active>
+        <spring.profiles.active>prod</spring.profiles.active>
       </properties>
       <dependencies>
         <dependency>
