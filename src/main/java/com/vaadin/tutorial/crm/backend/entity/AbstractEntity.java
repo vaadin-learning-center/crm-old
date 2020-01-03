@@ -42,9 +42,6 @@ public abstract class AbstractEntity {
     if (getId() == null || other.getId() == null) {
       return false;
     }
-    if (!getId().equals(other.getId())) {
-      return false;
-    }
-    return true;
+    return getId().equals(other.getId());
   }
 }
