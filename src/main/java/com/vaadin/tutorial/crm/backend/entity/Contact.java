@@ -8,6 +8,10 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Contact extends AbstractEntity implements Cloneable {
 
+  public enum Status {
+    ImportedLead, NotContacted, Contacted, Customer, ClosedLost
+  }
+
   @NotNull
   @NotEmpty
   private String firstName = "";
@@ -22,7 +26,7 @@ public class Contact extends AbstractEntity implements Cloneable {
 
   @Enumerated(EnumType.STRING)
   @NotNull
-  private ContactStatus status;
+  private Contact.Status status;
 
   @Email
   @NotNull
@@ -37,11 +41,11 @@ public class Contact extends AbstractEntity implements Cloneable {
     this.email = email;
   }
 
-  public ContactStatus getStatus() {
+  public Status getStatus() {
     return status;
   }
 
-  public void setStatus(ContactStatus status) {
+  public void setStatus(Status status) {
     this.status = status;
   }
 

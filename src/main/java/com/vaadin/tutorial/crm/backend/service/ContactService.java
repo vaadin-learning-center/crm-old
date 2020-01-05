@@ -2,18 +2,16 @@ package com.vaadin.tutorial.crm.backend.service;
 
 import com.vaadin.tutorial.crm.backend.entity.Company;
 import com.vaadin.tutorial.crm.backend.entity.Contact;
-import com.vaadin.tutorial.crm.backend.entity.ContactStatus;
 import com.vaadin.tutorial.crm.backend.repository.CompanyRepository;
 import com.vaadin.tutorial.crm.backend.repository.ContactRepository;
 import com.vaadin.tutorial.crm.backend.service.restimport.ImportResponse;
 import com.vaadin.tutorial.crm.backend.service.restimport.Result;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -111,7 +109,7 @@ public class ContactService {
 		contact.setFirstName(result.getName().getFirst());
 		contact.setLastName(result.getName().getLast());
 		contact.setEmail(result.getEmail());
-		contact.setStatus(ContactStatus.ImportedLead);
+		contact.setStatus(Contact.Status.ImportedLead);
 		return contact;
 	}
 
@@ -143,7 +141,7 @@ public class ContactService {
 						contact.setFirstName(split[0]);
 						contact.setLastName(split[1]);
 						contact.setCompany(companies.get(r.nextInt(companies.size())));
-						contact.setStatus(ContactStatus.values()[r.nextInt(ContactStatus.values().length)]);
+						contact.setStatus(Contact.Status.values()[r.nextInt(Contact.Status.values().length)]);
 						String email = (contact.getFirstName()+"."+ contact.getLastName()+"@"+ contact.getCompany().getName().replaceAll("[\\s-]", "")+".com").toLowerCase();
 						contact.setEmail(email);
 						return contact;

@@ -1,7 +1,5 @@
 package com.vaadin.tutorial.crm.ui.view.list;
 
-import java.util.List;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -17,14 +15,15 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 import com.vaadin.tutorial.crm.backend.entity.Company;
 import com.vaadin.tutorial.crm.backend.entity.Contact;
-import com.vaadin.tutorial.crm.backend.entity.ContactStatus;
+
+import java.util.List;
 
 public class ContactForm extends FormLayout {
 
   TextField firstName = new TextField("First name");
   TextField lastName = new TextField("Last name");
   TextField email = new TextField("Email");
-  ComboBox<ContactStatus> status = new ComboBox<>("Status");
+  ComboBox<Contact.Status> status = new ComboBox<>("Status");
   ComboBox<Company> company = new ComboBox<>("Company");
 
   Button save = new Button("Save");
@@ -36,7 +35,7 @@ public class ContactForm extends FormLayout {
   public ContactForm(List<Company> companies) {
     addClassName("contact-form");
 
-    status.setItems(ContactStatus.values());
+    status.setItems(Contact.Status.values());
     company.setItems(companies);
     company.setItemLabelGenerator(Company::getName);
 

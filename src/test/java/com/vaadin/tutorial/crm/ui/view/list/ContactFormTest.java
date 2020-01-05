@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.vaadin.tutorial.crm.backend.entity.Company;
 import com.vaadin.tutorial.crm.backend.entity.Contact;
-import com.vaadin.tutorial.crm.backend.entity.ContactStatus;
 import com.vaadin.tutorial.crm.ui.view.list.ContactForm.SaveEvent;
 
 import org.junit.Assert;
@@ -31,7 +30,7 @@ public class ContactFormTest {
         marcUsher.setFirstName("Marc");
         marcUsher.setLastName("Usher");
         marcUsher.setEmail("marc@usher.com");
-        marcUsher.setStatus(ContactStatus.NotContacted);
+        marcUsher.setStatus(Contact.Status.NotContacted);
         marcUsher.setCompany(company2);
     }
 
@@ -43,7 +42,7 @@ public class ContactFormTest {
         Assert.assertEquals("Usher", form.lastName.getValue());
         Assert.assertEquals("marc@usher.com", form.email.getValue());
         Assert.assertEquals(company2, form.company.getValue());
-        Assert.assertEquals(ContactStatus.NotContacted, form.status.getValue());
+        Assert.assertEquals(Contact.Status.NotContacted, form.status.getValue());
     }
 
     @Test
@@ -55,7 +54,7 @@ public class ContactFormTest {
         form.lastName.setValue("Doe");
         form.company.setValue(company1);
         form.email.setValue("john@doe.com");
-        form.status.setValue(ContactStatus.Customer);
+        form.status.setValue(Contact.Status.Customer);
 
         AtomicReference<Contact> savedContactRef = new AtomicReference<>(null);
         form.addListener(SaveEvent.class, e -> {
@@ -68,6 +67,6 @@ public class ContactFormTest {
         Assert.assertEquals("Doe", savedContact.getLastName());
         Assert.assertEquals("john@doe.com", savedContact.getEmail());
         Assert.assertEquals(company1, savedContact.getCompany());
-        Assert.assertEquals(ContactStatus.Customer, savedContact.getStatus());
+        Assert.assertEquals(Contact.Status.Customer, savedContact.getStatus());
     }
 }
