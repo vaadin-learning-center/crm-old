@@ -35,11 +35,12 @@ public class ContactForm extends FormLayout {
   public ContactForm(List<Company> companies) {
     addClassName("contact-form");
 
-    status.setItems(Contact.Status.values());
+    binder.bindInstanceFields(this);
+
     company.setItems(companies);
     company.setItemLabelGenerator(Company::getName);
+    status.setItems(Contact.Status.values());
 
-    binder.bindInstanceFields(this);
     firstName.setId("firstName");
     lastName.setId("lastName");
     email.setId("email");
@@ -48,29 +49,31 @@ public class ContactForm extends FormLayout {
     save.setId("save");
     delete.setId("delete");
     close.setId("close");
-    add(firstName, lastName, email, company, status, createButtons());
+    add(firstName, lastName, email, company, status, createButtonsLayout());
   }
 
-  private Component createButtons() {
-    save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-    save.addClickShortcut(Key.ENTER);
-    delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-    close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-    close.addClickShortcut(Key.ESCAPE);
+private Component createButtonsLayout() {
+  save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+  delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+  close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
-    save.addClickListener(event -> validateAndSave());
-    delete.addClickListener(event -> getEventBus().fireEvent(new DeleteEvent(this, binder.getBean())));
-    close.addClickListener(event -> getEventBus().fireEvent(new CloseEvent(this)));
+  save.addClickShortcut(Key.ENTER);
+  close.addClickShortcut(Key.ESCAPE);
 
-    binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
-    return new HorizontalLayout(save, delete, close);
+  save.addClickListener(event -> validateAndSave());
+  delete.addClickListener(event -> getEventBus().fireEvent(new DeleteEvent(this, binder.getBean())));
+  close.addClickListener(event -> getEventBus().fireEvent(new CloseEvent(this)));
+
+
+  binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
+  return new HorizontalLayout(save, delete, close);
+}
+
+private void validateAndSave() {
+  if (binder.isValid()) {
+    getEventBus().fireEvent(new SaveEvent(this, binder.getBean()));
   }
-
-  private void validateAndSave() {
-    if (binder.isValid()) {
-      getEventBus().fireEvent(new SaveEvent(this, binder.getBean()));
-    }
-  }
+}
 
   public void setContact(Contact contact) {
     binder.setBean(contact);
@@ -79,41 +82,42 @@ public class ContactForm extends FormLayout {
     }
   }
 
-  public static abstract class ContactFormEvent extends ComponentEvent<ContactForm> {
-    private Contact contact;
+// Events
+public static abstract class ContactFormEvent extends ComponentEvent<ContactForm> {
+  private Contact contact;
 
-    protected ContactFormEvent(ContactForm source, Contact contact) {
-      super(source, false);
-      this.contact = contact;
-    }
-
-    public Contact getContact() {
-      return contact;
-    }
+  protected ContactFormEvent(ContactForm source, Contact contact) {
+    super(source, false);
+    this.contact = contact;
   }
 
-  public static class SaveEvent extends ContactFormEvent {
-    SaveEvent(ContactForm source, Contact contact) {
-      super(source, contact);
-    }
+  public Contact getContact() {
+    return contact;
+  }
+}
+
+public static class SaveEvent extends ContactFormEvent {
+  SaveEvent(ContactForm source, Contact contact) {
+    super(source, contact);
+  }
+}
+
+public static class DeleteEvent extends ContactFormEvent {
+  DeleteEvent(ContactForm source, Contact contact) {
+    super(source, contact);
   }
 
-  public static class DeleteEvent extends ContactFormEvent {
-    DeleteEvent(ContactForm source, Contact contact) {
-      super(source, contact);
-    }
+}
 
+public static class CloseEvent extends ContactFormEvent {
+  CloseEvent(ContactForm source) {
+    super(source, null);
   }
+}
 
-  public static class CloseEvent extends ContactFormEvent {
-    CloseEvent(ContactForm source) {
-      super(source, null);
-    }
-  }
-
-  public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
-      ComponentEventListener<T> listener) {
-    return getEventBus().addListener(eventType, listener);
-  }
+public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
+    ComponentEventListener<T> listener) {
+  return getEventBus().addListener(eventType, listener);
+}
 
 }

@@ -1,11 +1,8 @@
 package com.vaadin.tutorial.crm.ui.view.list;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -15,22 +12,22 @@ import com.vaadin.tutorial.crm.backend.entity.Company;
 import com.vaadin.tutorial.crm.backend.entity.Contact;
 import com.vaadin.tutorial.crm.backend.service.CompanyService;
 import com.vaadin.tutorial.crm.backend.service.ContactService;
-import com.vaadin.tutorial.crm.ui.view.MainView;
+import com.vaadin.tutorial.crm.ui.view.MainLayout;
 import com.vaadin.tutorial.crm.ui.view.list.ContactForm.CloseEvent;
 import com.vaadin.tutorial.crm.ui.view.list.ContactForm.DeleteEvent;
 import com.vaadin.tutorial.crm.ui.view.list.ContactForm.SaveEvent;
 
-@Route(value = "", layout = MainView.class)
+@Route(value = "", layout = MainLayout.class)
 public class ListView extends VerticalLayout {
 
-  private ContactService service;
+  private ContactService contactService;
 
   private Grid<Contact> grid = new Grid<>(Contact.class);
   private TextField filterText = new TextField();
   private ContactForm form;
 
   public ListView(ContactService contactService, CompanyService companyService) {
-    this.service = contactService;
+    this.contactService = contactService;
 
     setSizeFull();
     addClassName("list-view");
@@ -40,6 +37,7 @@ public class ListView extends VerticalLayout {
     form.addListener(SaveEvent.class, this::saveContact);
     form.addListener(DeleteEvent.class, this::deleteContact);
     form.addListener(CloseEvent.class, e -> this.closeEditor());
+    closeEditor();
 
     HorizontalLayout toolbar = getToolbar();
 
@@ -49,22 +47,22 @@ public class ListView extends VerticalLayout {
 
     add(toolbar, content);
 
-    closeEditor();
     updateList();
   }
 
-  private void configureGrid() {
-    grid.addClassName("contact-grid");
-    grid.setSizeFull();
-    grid.removeColumnByKey("company");
-    grid.setColumns("firstName", "lastName", "email", "status");
-    grid.addColumn(contact -> {
-      Company company = contact.getCompany();
-      return company == null ? "-" : company.getName();
-    }).setHeader("Company");
-    grid.getColumns().forEach(col -> col.setAutoWidth(true));
-    grid.asSingleSelect().addValueChangeListener(event -> editContact(grid.asSingleSelect().getValue()));
-  }
+private void configureGrid() {
+  grid.addClassName("contact-grid");
+  grid.setSizeFull();
+  grid.removeColumnByKey("company");
+  grid.setColumns("firstName", "lastName", "email", "status");
+  grid.addColumn(contact -> {
+    Company company = contact.getCompany();
+    return company == null ? "-" : company.getName();
+  }).setHeader("Company");
+  grid.getColumns().forEach(col -> col.setAutoWidth(true));
+
+  grid.asSingleSelect().addValueChangeListener(event -> editContact(grid.asSingleSelect().getValue()));
+}
 
   private HorizontalLayout getToolbar() {
     filterText.setPlaceholder("Filter by name...");
@@ -75,21 +73,9 @@ public class ListView extends VerticalLayout {
     Button addContactButton = new Button("Add contact");
     addContactButton.addClickListener(click -> addContact());
 
-    Button importButton = new Button("Import leads", click -> importLeads());
-    importButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-    HorizontalLayout toolbar = new HorizontalLayout(filterText, addContactButton, importButton);
+    HorizontalLayout toolbar = new HorizontalLayout(filterText, addContactButton);
     toolbar.addClassName("toolbar");
     return toolbar;
-  }
-
-  private void importLeads() {
-    service.importContacts();
-    updateList();
-    Notification notification = new Notification("Import successful");
-    notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-    notification.setDuration(3000);
-    notification.open();
   }
 
   void addContact() {
@@ -98,7 +84,7 @@ public class ListView extends VerticalLayout {
   }
 
   public void updateList() {
-    grid.setItems(service.findAll(filterText.getValue()));
+    grid.setItems(contactService.findAll(filterText.getValue()));
   }
 
   public void editContact(Contact contact) {
@@ -111,17 +97,17 @@ public class ListView extends VerticalLayout {
     }
   }
 
-  private void saveContact(SaveEvent event) {
-    service.save(event.getContact());
-    updateList();
-    closeEditor();
-  }
+private void saveContact(SaveEvent event) {
+  contactService.save(event.getContact());
+  updateList();
+  closeEditor();
+}
 
-  private void deleteContact(DeleteEvent event) {
-    service.delete(event.getContact());
-    updateList();
-    closeEditor();
-  }
+private void deleteContact(DeleteEvent event) {
+  contactService.delete(event.getContact());
+  updateList();
+  closeEditor();
+}
 
   private void closeEditor() {
     form.setContact(null);

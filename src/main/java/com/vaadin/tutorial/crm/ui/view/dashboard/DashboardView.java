@@ -10,11 +10,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.tutorial.crm.backend.service.CompanyService;
 import com.vaadin.tutorial.crm.backend.service.ContactService;
-import com.vaadin.tutorial.crm.ui.view.MainView;
+import com.vaadin.tutorial.crm.ui.view.MainLayout;
 
 import java.util.Map;
 
-@Route(value = "dashboard", layout = MainView.class)
+@Route(value = "dashboard", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout {
 
   private ContactService contactService;
@@ -26,8 +26,13 @@ public class DashboardView extends VerticalLayout {
     addClassName("dashboard-view");
     setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
-    add(getContactStats(),
-        getCompaniesChart());
+    add(getContactStats(), getCompaniesChart());
+  }
+
+  private Component getContactStats() {
+    Span stats = new Span(contactService.count() + " contacts");
+    stats.addClassName("contact-stats");
+    return stats;
   }
 
   private Chart getCompaniesChart() {
@@ -39,11 +44,5 @@ public class DashboardView extends VerticalLayout {
         dataSeries.add(new DataSeriesItem(company, employees)));
     chart.getConfiguration().setSeries(dataSeries);
     return chart;
-  }
-
-  private Component getContactStats() {
-    Span stats = new Span(contactService.count() + " contacts");
-    stats.addClassName("contact-stats");
-    return stats;
   }
 }

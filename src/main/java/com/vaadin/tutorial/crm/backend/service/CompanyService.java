@@ -21,9 +21,9 @@ public class CompanyService {
     return companyRepository.findAll();
   }
 
-  public Map<String, Integer> getStats() {
-    HashMap<String, Integer> stats = new HashMap<>();
-    findAll().forEach(company -> stats.put(company.getName(), company.getEmployees().size()));
-    return stats;
-  }
+public Map<String, Integer> getStats() {
+  HashMap<String, Integer> stats = new HashMap<>();
+  findAll().forEach(company -> stats.put(company.getName(), company.getEmployees().size()));
+  return stats;
+}
 }

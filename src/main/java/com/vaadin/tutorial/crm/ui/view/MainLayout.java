@@ -18,14 +18,14 @@ import com.vaadin.tutorial.crm.ui.view.list.ListView;
 @PWA(name = "VaadinCRM", shortName = "VaadinCRM")
 @CssImport("./styles/styles.css")
 @Viewport("width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes, viewport-fit=cover")
-public class MainView extends AppLayout {
+public class MainLayout extends AppLayout {
 
-  public MainView() {
-    createNavbar();
+  public MainLayout() {
+    createHeader();
     createDrawer();
   }
 
-  private void createNavbar() {
+  private void createHeader() {
     H1 logo = new H1("Vaadin CRM");
     logo.addClassName("logo");
     Anchor logout = new Anchor("/logout", "Log out");

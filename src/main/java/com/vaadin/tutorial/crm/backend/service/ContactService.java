@@ -4,8 +4,6 @@ import com.vaadin.tutorial.crm.backend.entity.Company;
 import com.vaadin.tutorial.crm.backend.entity.Contact;
 import com.vaadin.tutorial.crm.backend.repository.CompanyRepository;
 import com.vaadin.tutorial.crm.backend.repository.ContactRepository;
-import com.vaadin.tutorial.crm.backend.service.restimport.ImportResponse;
-import com.vaadin.tutorial.crm.backend.service.restimport.Result;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,11 +23,9 @@ public class ContactService {
 	private RestTemplate restTemplate;
 
 	public ContactService(ContactRepository contactRepository,
-												CompanyRepository companyRepository,
-												RestTemplate restTemplate) {
+												CompanyRepository companyRepository) {
 		this.contactRepository = contactRepository;
 		this.companyRepository = companyRepository;
-		this.restTemplate = restTemplate;
 	}
 
 	/**
@@ -85,32 +81,6 @@ public class ContactService {
 			return;
 		}
 		contactRepository.save(contact);
-	}
-
-	/**
-	 * Imports contacts from a remote REST API and persists them in the database
-	 */
-	public void importContacts() {
-		ImportResponse imported = restTemplate.getForEntity("https://randomuser.me/api/?inc=name,email&results=10", ImportResponse.class).getBody();
-
-		if(imported != null && imported.getResults()!= null) {
-			contactRepository.saveAll(imported.getResults().stream()
-					.map(this::getContact).collect(Collectors.toList()));
-		}
-	}
-
-	/**
-	 * Converts a Result object from a REST call to a Contact
-	 * @param result A single result
-	 * @return a Contact populated with data from the Result
-	 */
-	private Contact getContact(Result result) {
-		Contact contact = new Contact();
-		contact.setFirstName(result.getName().getFirst());
-		contact.setLastName(result.getName().getLast());
-		contact.setEmail(result.getEmail());
-		contact.setStatus(Contact.Status.ImportedLead);
-		return contact;
 	}
 
 	/**
