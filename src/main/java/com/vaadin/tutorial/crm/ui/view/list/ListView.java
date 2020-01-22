@@ -17,14 +17,17 @@ import com.vaadin.tutorial.crm.ui.view.list.ContactForm.CloseEvent;
 import com.vaadin.tutorial.crm.ui.view.list.ContactForm.DeleteEvent;
 import com.vaadin.tutorial.crm.ui.view.list.ContactForm.SaveEvent;
 
+import org.springframework.stereotype.Component;
+
 @Route(value = "", layout = MainLayout.class)
+@Component
 public class ListView extends VerticalLayout {
 
   private ContactService contactService;
 
-  private Grid<Contact> grid = new Grid<>(Contact.class);
+  Grid<Contact> grid = new Grid<>(Contact.class);
   private TextField filterText = new TextField();
-  private ContactForm form;
+  ContactForm form;
 
   public ListView(ContactService contactService, CompanyService companyService) {
     this.contactService = contactService;
